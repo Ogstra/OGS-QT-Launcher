@@ -7,11 +7,9 @@ SOURCES += src/main.cpp \
            
 HEADERS += src/app/myapp.h
 
-INCLUDEPATH += /lib/QHotkey/include
+INCLUDEPATH += $$PWD/lib/QHotkey/QHotkey
+LIBS += -L$$PWD/lib/QHotkey/QHotkey -lqhotkey
 
-LIBS += -L/lib/QHotkey/include -lqhotkey
-
-DEPENDPATH += /lib/QHotkey/include
 
 CONFIG(debug, debug|release) {
     DESTDIR = $$PWD/build/test
