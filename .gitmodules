@@ -1,3 +1,4 @@
 [submodule "lib/QHotkey"]
 	path = lib/QHotkey
 	url = https://github.com/Skycoder42/QHotkey
+	recurse = true
