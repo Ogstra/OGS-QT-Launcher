@@ -7,8 +7,8 @@ SOURCES += src/main.cpp \
            
 HEADERS += src/app/myapp.h
 
-INCLUDEPATH += $$PWD/lib/QHotkey/QHotkey
-LIBS += -L$$PWD/lib/QHotkey/QHotkey -lqhotkey
+INCLUDEPATH += $$PRO_FILE_PWD/lib/QHotkey/
+LIBS += -L"$$PRO_FILE_PWD/lib/QHotkey/" -lqhotkey
 
 
 CONFIG(debug, debug|release) {
