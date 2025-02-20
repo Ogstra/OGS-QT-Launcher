@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "*.ejs": "html",
-        "qtextstream": "cpp",
-        "qguiapplication": "cpp",
-        "qlistwidgetitem": "cpp",
-        "qsystemtrayicon": "cpp"
-    }
-}
