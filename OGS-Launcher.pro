@@ -1,4 +1,4 @@
-QT += core gui widgets
+QT += core gui widgets x11extras
 
 CONFIG += c++17
 
@@ -7,8 +7,7 @@ SOURCES += src/main.cpp \
            
 HEADERS += src/app/myapp.h
 
-INCLUDEPATH += $$PRO_FILE_PWD/lib/QHotkey/
-LIBS += -L"$$PRO_FILE_PWD/lib/QHotkey/" -lqhotkey
+LIBS += -lqhotkey -lX11
 
 
 CONFIG(debug, debug|release) {
