@@ -13,7 +13,7 @@
 
 ### Debian 12
 
-```sudo apt installqt5-qmake qtbase5-dev libqt5x11extras5-dev cmake```
+```sudo apt install qt5-qmake qtbase5-dev libqt5x11extras5-dev cmake```
 
 ## Build
 
