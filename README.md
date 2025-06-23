@@ -6,34 +6,34 @@
 
 ![Screenshot_20250220_075956](https://github.com/user-attachments/assets/dcdb11fa-f334-4b11-8a5f-50ca2ed93aed)
 
-
 ## Dependencies
 
 - [QHotkey](https://github.com/Skycoder42/QHotkey/tree/bb630252684d3556b79ac7a521616692f348fcf7)
 
 ### Debian 12
 
-```sudo apt install qt5-qmake qtbase5-dev libqt5x11extras5-dev cmake```
+```bash
+sudo apt install qtbase5-dev libqt5x11extras5-dev cmake build-essential
+```
 
 ## Build
 
-### Test
-```
+```bash
+git submodule update --init
 mkdir -p build
 cd build
-qmake ../OGS-Launcher.pro CONFIG+=debug
+cmake ..
 make
 ```
+
 ### Install
-```
-mkdir -p build
-cd build
-qmake ../OGS-Launcher.pro
-sudo make
+
+```bash
+sudo make install
 ```
 
 ## Uninstall
-```
+```bash
 sudo rm /usr/share/applications/ogs.launcher.desktop
 sudo rm /usr/local/bin/OGS-Launcher
 ```
