@@ -19,10 +19,10 @@ sudo apt install qtbase5-dev libqt5x11extras5-dev cmake build-essential
 ## Build
 
 ```bash
-git submodule update --init
+git submodule update --init --recursive
 mkdir -p build
 cd build
-cmake ..
+cmake .. -DCMAKE_POLICY_VERSION_MINIMUM=3.5
 make
 ```
 

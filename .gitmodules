@@ -1,4 +1,8 @@
 [submodule "lib/QHotkey"]
 	path = lib/QHotkey
-	url = https://github.com/Skycoder42/QHotkey
+	url = https://github.com/Skycoder42/QHotkey.git
+	branch = master
+	update = checkout
+	ignore = none
+	shallow = true
 	recurse = true
