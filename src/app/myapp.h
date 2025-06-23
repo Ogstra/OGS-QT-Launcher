@@ -9,6 +9,7 @@
 #include <QProcess>
 #include <QSettings>
 #include <QString>
+#include <QKeySequence>
 
 class MyApp : public QMainWindow
 {
@@ -22,6 +23,7 @@ Q_OBJECT
 
 public slots:
     void LaunchApp(QListWidgetItem *item);
+    void showSearch();
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
@@ -29,6 +31,9 @@ protected:
 
 protected slots:
     void onFocusChanged(QWidget *old, QWidget *now);
+
+private slots:
+    void changeHotkey();
 
 private:
     void setupUI();

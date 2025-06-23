@@ -11,6 +11,9 @@
 #include <QLabel>
 #include <QFile>
 #include <QTextStream>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QKeySequenceEdit>
 
 MyApp::MyApp(QWidget *parent) : QMainWindow(parent)
 {
@@ -18,13 +21,15 @@ MyApp::MyApp(QWidget *parent) : QMainWindow(parent)
     maxItems = 5;
     fontSize = 20;
 
+    settings = new QSettings("ogs", "launcher", this);
+
     setupUI();
     setupTrayIcon();
     setupShortcut();
 
     this->hide();
     this->setFocusPolicy(Qt::StrongFocus);
-    this->setStyleSheet("border: 0px");
+    this->setStyleSheet("background-color: rgba(30,30,30,0.85); border: 0px; border-radius: 10px;");
 
     connect(qApp, &QApplication::focusChanged, this, &MyApp::onFocusChanged);
 }
@@ -33,6 +38,7 @@ MyApp::~MyApp()
 {
     delete trayIcon;
     delete hotkey;
+    delete settings;
 }
 
 void MyApp::setupUI()
@@ -46,13 +52,16 @@ void MyApp::setupUI()
     lineEdit = new QLineEdit(this);
     lineEdit->setFont(font);
     lineEdit->setFrame(false);
-    lineEdit->setStyleSheet("QLineEdit { background: transparent; padding: 4px; padding-left: 10px; padding-right: 10px; }");
-    lineEdit->setPlaceholderText("Buscar aplicaciones...");
+    lineEdit->setStyleSheet("QLineEdit { background-color: rgba(50,50,50,0.9); color: white; padding: 4px 10px; border-radius: 5px; } QLineEdit:focus { background-color: rgba(60,60,60,0.9); }");
+    lineEdit->setPlaceholderText("Busca una aplicación...");
+    QPalette p = lineEdit->palette();
+    p.setColor(QPalette::PlaceholderText, QColor("#bbbbbb"));
+    lineEdit->setPalette(p);
     lineEdit->installEventFilter(this);
 
     listWidget = new QListWidget(this);
     listWidget->setFont(font);
-    listWidget->setStyleSheet("QListWidget { background: transparent; border: none; }");
+    listWidget->setStyleSheet("QListWidget { background-color: rgba(50,50,50,0.9); border: none; } QListWidget::item { padding: 4px 10px; }");
 
     QVBoxLayout *layout = new QVBoxLayout();
     layout->setContentsMargins(0, 5, 0, 5);
@@ -63,6 +72,7 @@ void MyApp::setupUI()
     QWidget *centralWidget = new QWidget(this);
     centralWidget->setLayout(layout);
     centralWidget->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    centralWidget->setStyleSheet("background-color: transparent;");
     setCentralWidget(centralWidget);
 
     this->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -94,6 +104,10 @@ void MyApp::setupTrayIcon()
     trayIcon = new QSystemTrayIcon(QIcon::fromTheme("system-search"), this);
     QMenu *trayMenu = new QMenu(this);
 
+    QAction *changeHotkeyAction = new QAction("Cambiar atajo...", this);
+    connect(changeHotkeyAction, &QAction::triggered, this, &MyApp::changeHotkey);
+    trayMenu->addAction(changeHotkeyAction);
+
     QAction *quitAction = new QAction("Salir", this);
     connect(quitAction, &QAction::triggered, qApp, &QApplication::quit);
     trayMenu->addAction(quitAction);
@@ -104,7 +118,8 @@ void MyApp::setupTrayIcon()
 
 void MyApp::setupShortcut()
 {
-    hotkey = new QHotkey(QKeySequence("Ctrl+Alt+Q"), true, this);
+    QString key = settings->value("hotkey", "Ctrl+Alt+Q").toString();
+    hotkey = new QHotkey(QKeySequence(key), true, this);
     connect(hotkey, &QHotkey::activated, this, &MyApp::toggleVisibility);
 }
 
@@ -123,6 +138,51 @@ void MyApp::toggleVisibility()
         this->activateWindow();
         qDebug() << "Toggle Visibility (show)";
     }
+}
+
+void MyApp::changeHotkey()
+{
+    QDialog dialog(this);
+    dialog.setWindowTitle("Cambiar atajo");
+    QVBoxLayout *layout = new QVBoxLayout(&dialog);
+    QKeySequenceEdit *edit = new QKeySequenceEdit(&dialog);
+    edit->setKeySequence(hotkey->shortcut());
+    layout->addWidget(edit);
+
+    QDialogButtonBox *buttons = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel,
+                                                    &dialog);
+    layout->addWidget(buttons);
+    connect(buttons, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+    connect(buttons, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+
+    bool wasVisible = this->isVisible();
+    disconnect(qApp, &QApplication::focusChanged, this, &MyApp::onFocusChanged);
+
+    if (dialog.exec() == QDialog::Accepted)
+    {
+        QKeySequence seq = edit->keySequence();
+        if (!seq.isEmpty())
+        {
+            hotkey->setShortcut(seq, true);
+            settings->setValue("hotkey", seq.toString());
+        }
+    }
+
+    if (wasVisible)
+        this->showSearch();
+
+    connect(qApp, &QApplication::focusChanged, this, &MyApp::onFocusChanged);
+}
+
+void MyApp::showSearch()
+{
+    if (!this->isVisible())
+    {
+        this->setWindowFlags(Qt::Tool | Qt::FramelessWindowHint);
+        this->show();
+    }
+    lineEdit->setFocus();
+    this->activateWindow();
 }
 
 void MyApp::keyPressEvent(QKeyEvent *event)

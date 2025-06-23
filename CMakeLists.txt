@@ -14,7 +14,7 @@ include(GNUInstallDirs)
 # Build QHotkey from submodule
 add_subdirectory(lib/QHotkey)
 
-find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets)
+find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Network)
 
 add_executable(OGS-Launcher
     src/main.cpp
@@ -23,7 +23,7 @@ add_executable(OGS-Launcher
 )
 
 target_link_libraries(OGS-Launcher
-    PRIVATE Qt5::Core Qt5::Gui Qt5::Widgets QHotkey::QHotkey
+    PRIVATE Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Network QHotkey::QHotkey
 )
 
 install(TARGETS OGS-Launcher
