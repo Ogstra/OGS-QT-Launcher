@@ -29,7 +29,6 @@ MyApp::MyApp(QWidget *parent) : QMainWindow(parent)
 
     this->hide();
     this->setFocusPolicy(Qt::StrongFocus);
-    this->setStyleSheet("background-color: rgba(30,30,30,0.85); border: 0px; border-radius: 10px;");
 
     connect(qApp, &QApplication::focusChanged, this, &MyApp::onFocusChanged);
 }
@@ -52,7 +51,7 @@ void MyApp::setupUI()
     lineEdit = new QLineEdit(this);
     lineEdit->setFont(font);
     lineEdit->setFrame(false);
-    lineEdit->setStyleSheet("QLineEdit { background-color: rgba(50,50,50,0.9); color: white; padding: 4px 10px; border-radius: 5px; } QLineEdit:focus { background-color: rgba(60,60,60,0.9); }");
+    lineEdit->setStyleSheet("QLineEdit { color: white; padding: 4px 10px; border-radius: 5px; } QLineEdit:focus { }");
     lineEdit->setPlaceholderText("Busca una aplicación...");
     QPalette p = lineEdit->palette();
     p.setColor(QPalette::PlaceholderText, QColor("#bbbbbb"));
@@ -61,7 +60,7 @@ void MyApp::setupUI()
 
     listWidget = new QListWidget(this);
     listWidget->setFont(font);
-    listWidget->setStyleSheet("QListWidget { background-color: rgba(50,50,50,0.9); border: none; } QListWidget::item { padding: 4px 10px; }");
+    listWidget->setStyleSheet("QListWidget { border: none; } QListWidget::item { padding: 4px 10px; }");
 
     QVBoxLayout *layout = new QVBoxLayout();
     layout->setContentsMargins(0, 5, 0, 5);
